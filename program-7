@@ -1,14 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-// Structure to represent a process
 struct Process {
     int processID;
     int arrivalTime;
     int burstTime;
 };
 
-// Function to calculate waiting time and turnaround time
 void calculateTimes(struct Process processes[], int n, int waitingTime[], int turnaroundTime[]) {
     waitingTime[0] = 0; // Waiting time for the first process is 0
 
@@ -21,7 +19,6 @@ void calculateTimes(struct Process processes[], int n, int waitingTime[], int tu
     }
 }
 
-// Function to calculate average waiting time and average turnaround time
 void calculateAverages(struct Process processes[], int n) {
     int waitingTime[n], turnaroundTime[n];
 
@@ -40,7 +37,6 @@ void calculateAverages(struct Process processes[], int n) {
     printf("Average Turnaround Time: %.2f\n", avgTurnaroundTime);
 }
 
-// Function to display the schedule
 void displaySchedule(struct Process processes[], int n, int waitingTime[], int turnaroundTime[]) {
     printf("ProcessID\tArrival Time\tBurst Time\tWaiting Time\tTurnaround Time\n");
 
@@ -50,13 +46,11 @@ void displaySchedule(struct Process processes[], int n, int waitingTime[], int t
     }
 }
 
-// Function to perform Non-Preemptive SJF Scheduling
 void nonPreemptiveSJF(struct Process processes[], int n) {
     int time = 0; // Current time
     int completed = 0; // Number of completed processes
     int waitingTime[n], turnaroundTime[n];
 
-    // Sort processes based on burst time (Shortest Job First)
     for (int i = 0; i < n - 1; i++) {
         for (int j = 0; j < n - i - 1; j++) {
             if (processes[j].burstTime > processes[j + 1].burstTime) {
@@ -81,7 +75,6 @@ void nonPreemptiveSJF(struct Process processes[], int n) {
         }
     }
 
-    // Calculate and display average times and schedule
     calculateAverages(processes, n);
     displaySchedule(processes, n, waitingTime, turnaroundTime);
 }
@@ -89,13 +82,11 @@ void nonPreemptiveSJF(struct Process processes[], int n) {
 int main() {
     int n;
 
-    // Get the number of processes
     printf("Enter the number of processes: ");
     scanf("%d", &n);
 
     struct Process processes[n];
 
-    // Input process details
     for (int i = 0; i < n; i++) {
         processes[i].processID = i + 1;
 
@@ -105,8 +96,6 @@ int main() {
         printf("Enter burst time for Process %d: ", i + 1);
         scanf("%d", &processes[i].burstTime);
     }
-
-    // Perform Non-Preemptive SJF Scheduling
     nonPreemptiveSJF(processes, n);
 
     return 0;
