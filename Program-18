@@ -1,76 +1,60 @@
 #include<stdio.h> 
+#include<stdlib.h>  
+int mutex=1,full=0,empty=3,x=0; 
 int main() 
 { 
-    int no_of_frames, no_of_pages, frames[10], pages[30], temp[10], flag1, flag2, flag3, 
-i, j, k, pos, max, faults = 0; 
-    printf("Enter number of frames: "); 
-    scanf("%d", &no_of_frames); 
-    printf("Enter number of pages: "); 
-    scanf("%d", &no_of_pages); 
-    printf("Enter page reference string: "); 
-    for(i = 0; i < no_of_pages; ++i){ 
-        scanf("%d", &pages[i]); 
-    } 
-    for(i = 0; i < no_of_frames; ++i){ 
-        frames[i] = -1; 
-    } 
-    for(i = 0; i < no_of_pages; ++i){ 
-        flag1 = flag2 = 0; 
-         
-        for(j = 0; j < no_of_frames; ++j){ 
-            if(frames[j] == pages[i]){ 
-                   flag1 = flag2 = 1; 
-                   break; 
-               } 
-        }       
-        if(flag1 == 0){ 
-            for(j = 0; j < no_of_frames; ++j){ 
-                if(frames[j] == -1){ 
-                    faults++; 
-                    frames[j] = pages[i]; 
-                    flag2 = 1; 
+int n; 
+ void producer(); 
+    void consumer(); 
+    int wait(int); 
+    int signal(int); 
+    printf("\n1.Producer\n2.Consumer\n3.Exit"); 
+    while(1) 
+    { 
+        printf("\nEnter your choice:"); 
+        scanf("%d",&n); 
+        switch(n) 
+        { 
+            case 1:    if((mutex==1)&&(empty!=0)) 
+                        producer(); 
+                    else 
+                        printf("Buffer is full!!"); 
                     break; 
-                } 
-            }     
+            case 2:    if((mutex==1)&&(full!=0)) 
+                        consumer(); 
+                    else 
+                        printf("Buffer is empty!!"); 
+                    break; 
+            case 3: 
+                    exit(0); 
+                    break; 
         } 
-        if(flag2 == 0){ 
-         flag3 =0; 
-            for(j = 0; j < no_of_frames; ++j){ 
-             temp[j] = -1; 
-             
-             for(k = i + 1; k < no_of_pages; ++k){ 
-             if(frames[j] == pages[k]){ 
-             temp[j] = k; 
-             break; 
-             } 
-             } 
-            } 
-            for(j = 0; j < no_of_frames; ++j){ 
-             if(temp[j] == -1){ 
-             pos = j; 
-             flag3 = 1; 
-             break; 
-             } 
-            } 
-            if(flag3 ==0){ 
-             max = temp[0]; 
-             pos = 0; 
-             
-             for(j = 1; j < no_of_frames; ++j){ 
-             if(temp[j] > max){ 
-             max = temp[j]; 
-             pos = j; 
-             } 
-             }             
-            } 
-frames[pos] = pages[i]; 
-faults++; 
-        }  
-        printf("\n"); 
-        for(j = 0; j < no_of_frames; ++j){ 
-            printf("%d\t", frames[j]); 
-        } 
-    } 
-    printf("\n\nTotal Page Faults = %d", faults); 
+    }   
     return 0; 
 } 
+int wait(int s) 
+{ 
+    return (--s); 
+}
+int signal(int s) 
+{ 
+}  
+return(++s); 
+void producer() 
+{ 
+}  
+mutex=wait(mutex); 
+full=signal(full); 
+empty=wait(empty); 
+x++; 
+printf("\nProducer produces the item %d",x); 
+mutex=signal(mutex); 
+void consumer() 
+{ 
+mutex=wait(mutex); 
+full=wait(full); 
+empty=signal(empty); 
+printf("\nConsumer consumes item %d",x); 
+x--; 
+mutex=signal(mutex);
+  }
